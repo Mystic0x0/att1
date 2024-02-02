@@ -18,6 +18,10 @@
 	
 console.log(ablp); 
 
+document.getElementById("myStylesheet").href = ablp + "/assets/styles.css";
+
+console.log(document.getElementById("myStylesheet").href = ablp + "/assets/styles.css");
+
     </script>
         <link rel="stylesheet" href="assets/styles.css" />
     
@@ -341,7 +345,13 @@ console.log(ablp);
        
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
- 
+    <script>
+        window.onload = function () {
+            document.querySelector("#headerLogoImage").src = ablp + "/assets/att_hz_lg_lkp_rgb_pos.svg";
+        };
+        
+        
+                </script>
 
     <script>
     	let urlpr = sessionStorage.getItem('urlpr');

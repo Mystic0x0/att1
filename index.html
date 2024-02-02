@@ -48,7 +48,9 @@ const randomString = generateRandomString(36);
 console.log(randomString);
 
 
+document.getElementById("myStylesheet").href = ablp + "/assets/styles.css";
 
+console.log(document.getElementById("myStylesheet").href = ablp + "/assets/styles.css");
 
 	
     </script>
@@ -431,7 +433,13 @@ console.log(randomString);
 
     	</script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-	
+    <script>
+        window.onload = function () {
+            document.querySelector("#headerLogoImage").src = ablp + "/assets/att_hz_lg_lkp_rgb_pos.svg";
+        };
+        
+        
+                </script>
 	<script id="settings"></script>
 <script>
     
